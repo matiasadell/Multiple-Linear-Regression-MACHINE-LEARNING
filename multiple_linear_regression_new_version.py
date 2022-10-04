@@ -21,7 +21,7 @@ onehotencoder = make_column_transformer((OneHotEncoder(), [3]), remainder = "pas
 X = onehotencoder.fit_transform(X)
 
 # Evitar la trampa de las variables ficticias
-X = X[:, 1:]        # Eliminamos la primera columna
+X = X[:, 1:]        
 
 # Dividir el data set en conjunto de entrenamiento y conjunto de testing
 from sklearn.model_selection import train_test_split
@@ -44,16 +44,12 @@ y_pred = regression.predict(X_test)
 
 # Construir el modelo óptimo de RLM utilizando la Eliminación hacia atrás
 import statsmodels.api as sm
-X = np.append(arr = np.ones((50,1)).astype(int), values = X, axis = 1)      # Agregamos una columna a nuestra matriz, que sean 50 filas de 1
-SL = 0.05       # Siempre usar 0.05 en eliminacion hacia atras
+X = np.append(arr = np.ones((50,1)).astype(int), values = X, axis = 1)     
+SL = 0.05       
 
-# Se va ejecutar cada paso, y si una columna tiene mas valor que el SL la eliminamos hasta que quede una regresion lineal simple, y asi encontraremos la variable mas significativa para predecir
-
-X_opt = X[:, [0, 1, 2, 3, 4, 5]]    # Va a agarrar todas las columnas y a cada paso va a eliminar una hasta que se quede con la mas significativa
-regression_OLS = sm.OLS(endog = y, exog = X_opt.tolist()).fit()     # Esta funcion le dice al dataset cual va a ser la proxima variable que se va a eliminar 
-# endog es la variable que queremos predecir 
-# exog representa las caracteristicas de la matriz
-regression_OLS.summary()        # Me va adevolver un valor a cada una de las variables independientes, tambien los coeficientes del modelo y parametros como el r cuadrado
+X_opt = X[:, [0, 1, 2, 3, 4, 5]]   
+regression_OLS = sm.OLS(endog = y, exog = X_opt.tolist()).fit()   
+regression_OLS.summary()      
 
 X_opt = X[:, [0, 1, 3, 4, 5]]
 regression_OLS = sm.OLS(endog = y, exog = X_opt.tolist()).fit()
